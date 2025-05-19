@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <View>
       <View>
-        <Text>Hello, world home</Text>
+        <Text className="text-red-500">Hello, world home</Text>
         <Text>Welcome to React Native with Nat iveWind</Text>
       </View>
     </View>
