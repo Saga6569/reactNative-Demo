@@ -1,21 +1,26 @@
 import * as React from 'react';
-
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createStaticNavigation} from '@react-navigation/native';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import './global.css';
 import Home from './src/screenPage/Home';
 import Menu from './src/screenPage/Menu';
-import './global.css';
-const Stack = createNativeStackNavigator();
 
-const App = () => {
+const queryClient = new QueryClient();
+
+const Drawer = createDrawerNavigator({
+  screens: {
+    Home: Home,
+    Notifications: Menu,
+  },
+});
+
+const Navigation = createStaticNavigation(Drawer);
+
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Menu">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Menu" component={Menu} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <Navigation />
+    </QueryClientProvider>
   );
-};
-
-export default App;
+}
