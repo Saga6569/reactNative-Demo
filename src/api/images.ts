@@ -1,5 +1,5 @@
 import {useQuery} from '@tanstack/react-query';
-
+import {API_TOKEN} from '@env';
 // Типы для ответа API
 export interface Movie {
   kinopoiskId: number;
@@ -35,7 +35,7 @@ export const fetchMovies = async (): Promise<MoviesResponse> => {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      'X-API-KEY': '',
+      'X-API-KEY': API_TOKEN,
     },
   };
 
