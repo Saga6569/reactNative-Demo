@@ -1,5 +1,5 @@
-import {useQuery} from '@tanstack/react-query';
-import {API_TOKEN} from '@env';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {API_TOKEN_KINOPOISK, API_URL_KINOPOISK} from '@env';
 // Типы для ответа API
 export interface Movie {
   kinopoiskId: number;
@@ -24,23 +24,22 @@ export interface Movie {
 export interface MoviesResponse {
   items: Movie[];
   total: number;
-  limit: number;
+  totalPages: number;
   page: number;
-  pages: number;
 }
 
 // Функция для получения фильмов
-export const fetchMovies = async (): Promise<MoviesResponse> => {
+export const fetchMovies = async (page: number): Promise<MoviesResponse> => {
   const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      'X-API-KEY': API_TOKEN,
+      'X-API-KEY': `${API_TOKEN_KINOPOISK}`,
     },
   };
 
   const response = await fetch(
-    'https://kinopoiskapiunofficial.tech/api/v2.2/films?order=RATING&type=ALL&ratingFrom=0&ratingTo=10&yearFrom=1000&yearTo=3000&page=1',
+    `${API_URL_KINOPOISK}/films?order=RATING&type=ALL&ratingFrom=0&ratingTo=10&yearFrom=1000&yearTo=3000&page=${page}`,
     options,
   );
 
@@ -48,13 +47,27 @@ export const fetchMovies = async (): Promise<MoviesResponse> => {
     throw new Error('Ошибка при загрузке фильмов');
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('Raw API Response:', data);
+
+  return data;
 };
 
 // Хук для использования в компонентах
 export const useMovies = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['movies'],
-    queryFn: fetchMovies,
+    queryFn: ({pageParam = 1}) => {
+      return fetchMovies(pageParam);
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      const currentPage = allPages.length;
+      if (currentPage < lastPage.totalPages) {
+        const nextPage = currentPage + 1;
+        return nextPage;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
   });
 };
