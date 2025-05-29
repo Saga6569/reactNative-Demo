@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {useMovies} from '../api/images';
+import {useMoviesTvSerial} from '../api/images';
 import RenderItemsList from '../components/RenderItemsList';
 
-const Home = () => {
+const TvSerial = () => {
   const {
     data,
     isLoading,
@@ -11,7 +11,7 @@ const Home = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useMovies();
+  } = useMoviesTvSerial();
 
   if (isLoading) {
     return (
@@ -43,4 +43,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default TvSerial;
