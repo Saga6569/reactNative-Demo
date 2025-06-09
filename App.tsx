@@ -3,7 +3,7 @@ import {TouchableOpacity, View, StyleSheet} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {Movie} from './src/api/images';
-import BackArrow from './src/components/icons/BackArrow';
+import BackArrow from './src/icons/BackArrow';
 
 import Home from './src/screenPage/Home';
 import FilmsList from './src/screenPage/FilmsList';

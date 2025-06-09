@@ -37,7 +37,29 @@ export interface IOptions {
   yearTo: number;
 }
 
-// const url = `https://kinopoiskapiunofficial.tech/api/v2.2/films/1252447`;
+//https://kinopoiskapiunofficial.tech/api/v2.2/films/222/seasons
+const fetchMovieVideo = async (id: string): Promise<MoviesResponse> => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      'X-API-KEY': `${API_TOKEN_KINOPOISK}`,
+    },
+  };
+
+  const response = await fetch(
+    `${API_URL_KINOPOISK}/films/${id}/videos`,
+    options,
+  );
+
+  if (!response.ok) {
+    throw new Error('Ошибка при загрузке фильмов');
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const fetchMovie = async (id: string): Promise<MoviesResponse> => {
   // const initOptions: IOptions = {
   //   type: 'ALL',
@@ -62,9 +84,15 @@ export const fetchMovie = async (id: string): Promise<MoviesResponse> => {
   }
 
   const data = await response.json();
-  console.log('Raw API Response:', data);
-
   return data;
+};
+
+export const useMovieVideo = (id: string) => {
+  return useQuery({
+    queryKey: ['movieVideo', id],
+    queryFn: () => fetchMovieVideo(id),
+    enabled: !!id,
+  });
 };
 
 // Функция для получения фильмов
@@ -94,6 +122,27 @@ export const fetchMovies = async (
 
   return data;
 };
+
+// export const useMovieVideoAndMovie = (id: string) => {
+//   const movieQuery = useQuery({
+//     queryKey: ['movie', id],
+//     queryFn: () => fetchMovie(id),
+//     enabled: !!id,
+//   });
+
+//   const videoQuery = useQuery({
+//     queryKey: ['movieVideo', id],
+//     queryFn: () => fetchMovieVideo(id),
+//     enabled: !!id,
+//   });
+
+//   return {
+//     movie: movieQuery.data,
+//     video: videoQuery.data,
+//     isLoading: movieQuery.isLoading || videoQuery.isLoading,
+//     error: movieQuery.error || videoQuery.error,
+//   };
+// };
 
 export const useMovie = (id: string) => {
   return useQuery({
