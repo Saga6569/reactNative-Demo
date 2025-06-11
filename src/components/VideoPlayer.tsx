@@ -23,7 +23,7 @@ const VideoPlayer = ({url}: {url: string}) => (
     onProgress={({currentTime}) => {
       console.log('Текущее время:', currentTime);
     }}
-    controls
+    controls={false}
   />
 );
 
